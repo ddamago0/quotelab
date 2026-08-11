@@ -18,7 +18,8 @@ class Settings(BaseSettings):
     DATASET_PATH: str = "data/citas.xlsx"
     DEBATE_RELEVANCE_THRESHOLD: float = 0.65
     MAX_UNITS_PER_BATCH: int = 500
-    EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"
+    EMBEDDING_MODEL_NAME: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    DEFAULT_TOP_K: int = 3
 
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
