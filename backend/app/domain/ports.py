@@ -1,7 +1,8 @@
-from typing import Protocol, List, Dict, Any, Optional
+from typing import Protocol, List, Dict, Any, Optional, runtime_checkable
 from app.domain.models import Quote, QuoteMatch
 
 
+@runtime_checkable
 class QuoteRepositoryPort(Protocol):
     """Abstract port for accessing quote dataset records."""
 
@@ -14,6 +15,7 @@ class QuoteRepositoryPort(Protocol):
         ...
 
 
+@runtime_checkable
 class VectorStorePort(Protocol):
     """Abstract port for dense vector index storage and retrieval."""
 
@@ -26,6 +28,7 @@ class VectorStorePort(Protocol):
         ...
 
 
+@runtime_checkable
 class EmbedderPort(Protocol):
     """Abstract port for generating text dense embeddings."""
 
@@ -38,6 +41,7 @@ class EmbedderPort(Protocol):
         ...
 
 
+@runtime_checkable
 class LLMProviderPort(Protocol):
     """Abstract port for decoupled LLM text generation."""
 
@@ -46,9 +50,11 @@ class LLMProviderPort(Protocol):
         ...
 
 
+@runtime_checkable
 class TokenizerPort(Protocol):
     """Abstract port for measuring text unit / token counts."""
 
     def count_units(self, text: str) -> int:
         """Calculates token or text-unit count for a given text string."""
         ...
+

@@ -4,9 +4,11 @@ QuoteLab is an AI engineering single-page application (SPA) platform built on a 
 
 ## Core Technologies
 
-- **Backend**: Python 3.11+, FastAPI, Pydantic v2, pytest
+- **Backend**: Python 3.11+, FastAPI, Pydantic v2, pytest, openpyxl
 - **Frontend**: React 18, Vite, Vanilla CSS
 - **Architecture**: Decoupled Layered Architecture (Ports & Adapters)
+- **Dataset**: 100 real quotes loaded from `data/citas.xlsx` via `ExcelQuoteRepository`
+
 
 ## General Structure
 
