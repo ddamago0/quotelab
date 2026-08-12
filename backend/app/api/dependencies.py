@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Optional
 from fastapi import Depends
 
 from app.config import settings
@@ -8,6 +9,7 @@ from app.infra.repositories.excel_quote_repository import ExcelQuoteRepository
 from app.infra.embeddings.local_embedder import LocalSentenceTransformerEmbedder
 from app.infra.vector_store.in_memory_vector_store import InMemoryVectorStore
 from app.infra.llm.mock_llm_provider import MockLLMProvider
+from app.infra.llm.ollama_llm_provider import OllamaLLMProvider
 from app.services.semantic_retriever import SemanticRetriever
 from app.services.debate_service import DebateService
 
@@ -48,9 +50,25 @@ def get_semantic_retriever() -> SemanticRetriever:
 def get_llm_provider() -> LLMProviderPort:
     """
     Dependency provider for LLMProviderPort instance.
-    Currently returns MockLLMProvider for deterministic development and testing.
+    Selects LLM provider implementation dynamically based on settings.LLM_PROVIDER.
+    - 'mock-dev' or 'mock': Returns MockLLMProvider for deterministic dev/testing.
+    - 'ollama': Returns OllamaLLMProvider for local inference via Ollama HTTP API.
     """
-    return MockLLMProvider(provider_name="mock-dev-llm")
+    provider = settings.LLM_PROVIDER.lower().strip()
+    if provider in ("mock-dev", "mock"):
+        return MockLLMProvider(provider_name="mock-dev-llm")
+    elif provider == "ollama":
+        return OllamaLLMProvider(
+            base_url=settings.OLLAMA_BASE_URL,
+            model=settings.OLLAMA_MODEL,
+            timeout=settings.OLLAMA_TIMEOUT,
+        )
+    else:
+        raise ValueError(
+            f"Unsupported LLM_PROVIDER setting: '{settings.LLM_PROVIDER}'. "
+            "Supported options are 'mock-dev' and 'ollama'."
+        )
+
 
 
 @lru_cache()
@@ -68,3 +86,4 @@ def get_debate_service(
         relevance_threshold=settings.DEBATE_RELEVANCE_THRESHOLD,
         max_evidence_quotes=settings.DEBATE_EVIDENCE_TOP_K
     )
+
