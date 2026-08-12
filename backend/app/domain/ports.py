@@ -1,5 +1,5 @@
 from typing import Protocol, List, Dict, Any, Optional, runtime_checkable
-from app.domain.models import Quote, QuoteMatch
+from app.domain.models import Quote, QuoteMatch, DebateArgument
 
 
 @runtime_checkable
@@ -43,10 +43,22 @@ class EmbedderPort(Protocol):
 
 @runtime_checkable
 class LLMProviderPort(Protocol):
-    """Abstract port for decoupled LLM text generation."""
+    """
+    Abstract provider-agnostic port for LLM generation.
+    Decoupled from cloud APIs (OpenAI, Anthropic, Gemini) and specific vendor SDKs.
+    Allows local inference engines (such as Ollama) or mock providers to be plugged in seamlessly.
+    """
 
     def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
         """Generates text completion based on prompt and optional system instructions."""
+        ...
+
+    def generate_debate_arguments(
+        self,
+        topic: str,
+        evidence_quotes: List[Quote]
+    ) -> List[DebateArgument]:
+        """Generates structured debate arguments grounded strictly in the provided evidence quotes."""
         ...
 
 

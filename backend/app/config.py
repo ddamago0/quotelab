@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     # Configurable Parameters (ready for calibration)
     DATASET_PATH: str = "data/citas.xlsx"
     DEBATE_RELEVANCE_THRESHOLD: float = 0.65
+    DEBATE_EVIDENCE_TOP_K: int = 3
+    LLM_PROVIDER: str = "mock-dev"
     MAX_UNITS_PER_BATCH: int = 500
     EMBEDDING_MODEL_NAME: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     DEFAULT_TOP_K: int = 3

@@ -65,3 +65,27 @@ npm run dev
 ```
 
 Frontend SPA will be running at `http://localhost:5173`.
+
+
+## Desafío 2 — Debate Basado en Evidencia (Fase 4A)
+
+### Propósito de `DebateService`
+El servicio `DebateService` (`backend/app/services/debate_service.py`) gestiona la generación estructurada de debates filosóficos y argumentativos fundamentados estrictamente en evidencias recuperadas del corpus de citas.
+
+### Abstracción de Proveedor LLM (`LLMProviderPort`)
+El puerto `LLMProviderPort` (`backend/app/domain/ports.py`) define el contrato agnóstico para la generación de texto y argumentos estructurados (`generate` y `generate_debate_arguments`). Está completamente desacoplado de APIs en la nube (OpenAI, Anthropic, Gemini) y SDKs propietarios, garantizando que el sistema opere de forma local y permita conectar inferencia local en futuras fases.
+
+### Proveedor de Desarrollo / Prueba (`MockLLMProvider`)
+Se implementó `MockLLMProvider` (`backend/app/infra/llm/mock_llm_provider.py`), un proveedor determinista para desarrollo y pruebas locales. No requiere llaves de API ni conexión a Internet, garantizando la trazabilidad exacta de los identificadores de citas recuperadas (`evidence_quote_ids`) y respuestas estructuradas reproducibles.
+
+### Fundamentación en Evidencia y Prevención de Alucinaciones
+- **Filtrado por Umbral**: Las citas recuperadas por `SemanticRetriever` se filtran usando un umbral de similitud semántica configurable (`settings.DEBATE_RELEVANCE_THRESHOLD`).
+- **Rechazo Controlado**: Si ninguna cita alcanza el umbral de relevancia, `DebateService` retorna `sufficient_evidence=False` junto con un mensaje explícito de rechazo (`refusal_message`).
+- **Cero Fabricación**: El sistema jamás inventa citas ni atribuciones que no existan en el dataset.
+
+### Limitaciones Actuales
+- La Fase 4A abarca la arquitectura de dominio, servicios y proveedor simulado. No expone aún el endpoint REST de debate ni la interfaz de usuario en el frontend.
+- La generación de argumentos utiliza el proveedor simulado determinista `MockLLMProvider`.
+
+### Integración Futura de LLM Local
+Gracias al diseño desacoplado (Clean Architecture), la integración futura de un LLM local (por ejemplo, Ollama ejecutando Llama 3 o Mistral) se realizará creando un nuevo adaptador `OllamaLLMProvider` en `infra/llm/` que implemente `LLMProviderPort`, sin modificar `DebateService` ni las capas de dominio.

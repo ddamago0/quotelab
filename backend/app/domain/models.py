@@ -24,12 +24,51 @@ class SearchResult(BaseModel):
 
 
 class DebateEssay(BaseModel):
-    """Response payload for Evidence-Backed Debate challenge."""
+    """Response payload for Evidence-Backed Debate challenge (essay format)."""
     question: str
     sufficient_evidence: bool = Field(..., description="True if retrieved sources satisfy relevance threshold")
     paragraphs: List[str] = Field(default_factory=list, description="Array of essay paragraphs (exactly 2 when sufficient evidence)")
     evidence_quotes: List[Quote] = Field(default_factory=list, description="Verbatim quotes used as evidence")
     message: Optional[str] = Field(default=None, description="Explicit refusal message if evidence is insufficient")
+
+
+class DebateRequest(BaseModel):
+    """Domain request model for evidence-backed debate generation."""
+    topic: str = Field(..., description="Debate topic or statement to analyze")
+    min_evidence_score: Optional[float] = Field(
+        default=None,
+        ge=-1.0,
+        le=1.0,
+        description="Optional minimum cosine similarity score threshold for evidence relevance"
+    )
+
+
+class DebateArgument(BaseModel):
+    """Domain model representing a single argument grounded in evidence."""
+    position: str = Field(..., description="Stance or perspective of the argument (e.g., 'Pro', 'Con', 'Perspective A')")
+    argument_text: str = Field(..., description="Generated argument text grounded strictly in retrieved quotes")
+    evidence_quote_ids: List[str] = Field(
+        default_factory=list,
+        description="IDs of quotes explicitly cited/used to back this argument"
+    )
+
+
+class DebateResponse(BaseModel):
+    """Domain response model for evidence-backed debate generation."""
+    topic: str = Field(..., description="Original debate topic")
+    sufficient_evidence: bool = Field(..., description="True if retrieved evidence satisfies relevance threshold")
+    arguments: List[DebateArgument] = Field(
+        default_factory=list,
+        description="Structured list of arguments when sufficient evidence exists"
+    )
+    evidence_quotes: List[Quote] = Field(
+        default_factory=list,
+        description="Verbatim quotes retrieved and used as evidence"
+    )
+    refusal_message: Optional[str] = Field(
+        default=None,
+        description="Controlled refusal message if evidence is insufficient"
+    )
 
 
 class BatchItem(BaseModel):
