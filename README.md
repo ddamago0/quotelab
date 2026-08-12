@@ -133,5 +133,19 @@ Gracias al diseño desacoplado (Clean Architecture), la integración futura de u
 - No se exponen trazas internas de error al cliente ni se fabrican IDs de citas.
 
 ### Estado Actual del Proveedor LLM
-- Se mantiene el uso de `MockLLMProvider` determinista para desarrollo y pruebas.
-- No se requieren llaves de API, servicios en la nube ni la ejecución actual de Ollama.
+- Se mantiene el uso de `MockLLMProvider` determinista para desarrollo y pruebas en la API principal.
+- No se requieren llaves de API, servicios en la nube ni la ejecución activa de Ollama para la ejecución por defecto.
+
+
+## Adaptador de Proveedor LLM Local con Ollama (Fase 4C-1)
+
+### Adaptador `OllamaLLMProvider`
+Se implementó el adaptador `OllamaLLMProvider` en `backend/app/infra/llm/ollama_llm_provider.py` que satisface el contrato `LLMProviderPort`.
+- **Comunicación HTTP**: Utiliza `httpx` para conectarse a la API REST de Ollama (`POST /api/chat`, por defecto en `http://localhost:11434`).
+- **Configuración Desacoplada**: Soporta `OLLAMA_BASE_URL`, `OLLAMA_MODEL` y `OLLAMA_TIMEOUT` configurables desde `backend/app/config.py`.
+- **Parseo Defensivo**: Maneja respuestas estructuradas JSON y limpia automáticamente bloques envueltos en sintaxis Markdown (```json ... ```).
+- **Atribución Estricta**: Valida y garantiza que los `evidence_quote_ids` retornados correspondan exclusivamente a las citas de evidencia suministradas.
+- **Sin SDKs Propietarios ni Nube**: Cero dependencias de SDKs de terceros ni APIs en la nube.
+
+> [!NOTE]
+> **Estado de Activación**: La Fase 4C-1 crea y prueba de forma aislada el adaptador `OllamaLLMProvider`. **NO activa aún Ollama como el proveedor activo en la inyección de dependencias** (`dependencies.py`). `MockLLMProvider` se mantiene como el proveedor activo por defecto.
