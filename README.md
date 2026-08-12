@@ -89,3 +89,49 @@ Se implementó `MockLLMProvider` (`backend/app/infra/llm/mock_llm_provider.py`),
 
 ### Integración Futura de LLM Local
 Gracias al diseño desacoplado (Clean Architecture), la integración futura de un LLM local (por ejemplo, Ollama ejecutando Llama 3 o Mistral) se realizará creando un nuevo adaptador `OllamaLLMProvider` en `infra/llm/` que implemente `LLMProviderPort`, sin modificar `DebateService` ni las capas de dominio.
+
+
+## Desafío 2 — REST API del Debate (Fase 4B)
+
+### Endpoint REST
+`POST /api/debate`
+
+### Formato de Solicitud (JSON)
+```json
+{
+  "topic": "Is failure necessary for success?",
+  "min_evidence_score": 0.65
+}
+```
+
+### Estructura de Respuesta (JSON)
+```json
+{
+  "topic": "Is failure necessary for success?",
+  "sufficient_evidence": true,
+  "arguments": [
+    {
+      "position": "Perspectiva A (A favor)",
+      "argument_text": "[DESARROLLO MOCK] En relación con el debate 'Is failure necessary for success?', J.K. Rowling ofrece evidencia clave: \"...\"",
+      "evidence_quote_ids": ["q_28"]
+    }
+  ],
+  "evidence_quotes": [
+    {
+      "id": "q_28",
+      "text": "It is impossible to live without failing at something...",
+      "author": "J.K. Rowling",
+      "tags": ["life", "failure"]
+    }
+  ],
+  "refusal_message": null
+}
+```
+
+### Fundamentación en Evidencia y Manejo de Evidencia Insuficiente
+- Si ninguna cita supera el umbral de similitud semántica configurable (`settings.DEBATE_RELEVANCE_THRESHOLD`), la API responde con un estado HTTP 200 y una respuesta estructurada conteniendo `sufficient_evidence: false`, `arguments: []`, `evidence_quotes: []` y un mensaje explícito de rechazo en `refusal_message`.
+- No se exponen trazas internas de error al cliente ni se fabrican IDs de citas.
+
+### Estado Actual del Proveedor LLM
+- Se mantiene el uso de `MockLLMProvider` determinista para desarrollo y pruebas.
+- No se requieren llaves de API, servicios en la nube ni la ejecución actual de Ollama.
