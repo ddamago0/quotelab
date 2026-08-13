@@ -4,14 +4,16 @@ from typing import Optional
 from fastapi import Depends
 
 from app.config import settings
-from app.domain.ports import LLMProviderPort
+from app.domain.ports import LLMProviderPort, TokenizerPort, QuoteRepositoryPort
 from app.infra.repositories.excel_quote_repository import ExcelQuoteRepository
 from app.infra.embeddings.local_embedder import LocalSentenceTransformerEmbedder
 from app.infra.vector_store.in_memory_vector_store import InMemoryVectorStore
 from app.infra.llm.mock_llm_provider import MockLLMProvider
 from app.infra.llm.ollama_llm_provider import OllamaLLMProvider
+from app.infra.tokenizer.local_tokenizer import LocalTokenizer
 from app.services.semantic_retriever import SemanticRetriever
 from app.services.debate_service import DebateService
+from app.services.batch_optimizer_service import BatchOptimizerService
 
 
 def resolve_dataset_path() -> Path:
@@ -27,13 +29,25 @@ def resolve_dataset_path() -> Path:
 
 
 @lru_cache()
+def get_quote_repository() -> QuoteRepositoryPort:
+    """Dependency provider for QuoteRepositoryPort instance."""
+    dataset_path = resolve_dataset_path()
+    return ExcelQuoteRepository(dataset_path)
+
+
+@lru_cache()
+def get_tokenizer() -> TokenizerPort:
+    """Dependency provider for TokenizerPort instance."""
+    return LocalTokenizer()
+
+
+@lru_cache()
 def get_semantic_retriever() -> SemanticRetriever:
     """
     Dependency provider for SemanticRetriever singleton instance.
     Cached via lru_cache to avoid reloading SentenceTransformer model or re-indexing on every HTTP request.
     """
-    dataset_path = resolve_dataset_path()
-    quote_repository = ExcelQuoteRepository(dataset_path)
+    quote_repository = get_quote_repository()
     embedder = LocalSentenceTransformerEmbedder(model_name=settings.EMBEDDING_MODEL_NAME)
     vector_store = InMemoryVectorStore()
 
@@ -70,7 +84,6 @@ def get_llm_provider() -> LLMProviderPort:
         )
 
 
-
 @lru_cache()
 def get_debate_service(
     retriever: SemanticRetriever = Depends(get_semantic_retriever),
@@ -86,4 +99,21 @@ def get_debate_service(
         relevance_threshold=settings.DEBATE_RELEVANCE_THRESHOLD,
         max_evidence_quotes=settings.DEBATE_EVIDENCE_TOP_K
     )
+
+
+@lru_cache()
+def get_batch_optimizer_service(
+    quote_repository: QuoteRepositoryPort = Depends(get_quote_repository),
+    tokenizer: TokenizerPort = Depends(get_tokenizer)
+) -> BatchOptimizerService:
+    """
+    Dependency provider for BatchOptimizerService singleton instance.
+    Injects cached quote_repository and tokenizer dependencies.
+    """
+    return BatchOptimizerService(
+        quote_repository=quote_repository,
+        tokenizer=tokenizer,
+        max_units_per_batch=settings.MAX_UNITS_PER_BATCH
+    )
+
 

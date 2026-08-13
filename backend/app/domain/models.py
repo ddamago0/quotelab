@@ -92,3 +92,17 @@ class BatchReceipt(BaseModel):
     max_units_per_request: int
     batches: List[Batch]
     failed_items: List[str] = Field(default_factory=list, description="IDs of items exceeding capacity on their own")
+
+
+class BatchRequest(BaseModel):
+    """Domain request model for Budget & Batching Optimizer challenge."""
+    quote_ids: Optional[List[str]] = Field(
+        default=None,
+        description="Optional list of quote IDs to pack. If omitted or null, processes all quotes in dataset."
+    )
+    max_units_per_batch: Optional[int] = Field(
+        default=None,
+        gt=0,
+        description="Optional override for maximum unit capacity per batch"
+    )
+

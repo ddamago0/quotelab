@@ -4,6 +4,7 @@ from app.config import settings
 from app.api.health import router as health_router
 from app.api.search import router as search_router
 from app.api.debate import router as debate_router
+from app.api.batch import router as batch_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -25,6 +26,8 @@ app.add_middleware(
 app.include_router(health_router, prefix=settings.API_PREFIX)
 app.include_router(search_router, prefix=settings.API_PREFIX)
 app.include_router(debate_router, prefix=settings.API_PREFIX)
+app.include_router(batch_router, prefix=settings.API_PREFIX)
+
 
 
 

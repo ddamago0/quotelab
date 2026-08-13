@@ -167,3 +167,56 @@ OLLAMA_TIMEOUT=180.0
 ```bash
 RUN_REAL_OLLAMA_TESTS=1 .venv/bin/pytest -v tests/test_real_ollama_integration.py
 ```
+
+
+## Desafío 3 — Budget & Batching Optimizer (Fase 5)
+
+### Propósito y Arquitectura
+El módulo `BatchOptimizerService` (`backend/app/services/batch_optimizer_service.py`) gestiona la agrupación óptima y determinista de citas en lotes (batches), respetando una capacidad máxima de unidades/tokens por lote (`settings.MAX_UNITS_PER_BATCH`, por defecto 500 unidades).
+
+### Conteo de Unidades / Tokens (`LocalTokenizer`)
+Se implementó el adaptador `LocalTokenizer` en `backend/app/infra/tokenizer/local_tokenizer.py` que satisface la abstracción `TokenizerPort` (`backend/app/domain/ports.py`).
+- Realiza un conteo determinista de palabras/tokens locales por espacio en blanco.
+- Opera de forma 100% local sin depender de APIs externas, llaves o conexión a red.
+
+### Algoritmo Greedy de Empaquetado de Lotes
+- **Estrategia**: Utiliza un algoritmo voraz (*First-Fit Greedy*) determinista que agrupa citas respetando el orden original.
+- **Manejo de Desbordamiento y Elementos Sobredimensionados**: Si una cita individual excede la capacidad máxima del lote por sí sola, no se descarta en silencio ni corrompe el lote; se registra explícitamente en el arreglo `failed_items` del recibo final (`BatchReceipt`).
+- **Trazabilidad Completa**: Devuelve un `BatchReceipt` detallando `total_items_processed`, `total_units_consumed`, `total_batches_created`, `max_units_per_request`, la lista estructurada de objetos `Batch` y los `failed_items`.
+
+### Endpoint REST
+`POST /api/batch`
+
+#### Solicitud de Ejemplo (JSON)
+```json
+{
+  "quote_ids": ["q_1", "q_2", "q_3"],
+  "max_units_per_batch": 500
+}
+```
+*Nota: Si `quote_ids` se omite o es nulo, el servicio procesa automáticamente todas las citas disponibles en el repositorio.*
+
+#### Respuesta de Ejemplo (JSON)
+```json
+{
+  "total_items_processed": 3,
+  "total_units_consumed": 45,
+  "total_batches_created": 1,
+  "max_units_per_request": 500,
+  "batches": [
+    {
+      "batch_id": 1,
+      "items": [
+        { "quote_id": "q_1", "unit_count": 15 },
+        { "quote_id": "q_2", "unit_count": 18 },
+        { "quote_id": "q_3", "unit_count": 12 }
+      ],
+      "total_units": 45
+    }
+  ],
+  "failed_items": []
+}
+```
+
+### Cobertura de Pruebas
+Se agregaron tres suites de pruebas dedicadas (`test_tokenizer.py`, `test_batch_optimizer_service.py` y `test_batch_api.py`) que validan el conteo determinista, empaquetado voraz, límites de capacidad exacta, aislamiento de ítems fallidos y respuestas HTTP del API REST.
