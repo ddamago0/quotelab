@@ -41,7 +41,7 @@ export default function BatchTab() {
   return (
     <div className="batch-tab-container">
       <div className="tab-header">
-        <h2>Budget & Batching Optimizer</h2>
+        <h2>[OPTIMIZER] Token Capacity & Packing Engine</h2>
         <p className="tab-description">
           Optimally pack quote items into token/unit constrained batches using a deterministic First-Fit Greedy algorithm to maximize throughput within model context limits.
         </p>
@@ -51,7 +51,7 @@ export default function BatchTab() {
         <div className="form-row">
           <div className="form-group capacity-input-group">
             <label htmlFor="max-units-input" className="form-label">
-              Max Units Capacity Per Batch
+              Max Token Capacity Per Batch
             </label>
             <input
               id="max-units-input"
@@ -75,7 +75,7 @@ export default function BatchTab() {
             className="btn btn-primary optimize-btn"
             disabled={loading}
           >
-            {loading ? 'Optimizing...' : 'Create & Optimize Batches'}
+            {loading ? 'Packing...' : 'Execute Batching'}
           </button>
         </div>
       </form>
@@ -87,7 +87,7 @@ export default function BatchTab() {
             <span>⚠️ {error}</span>
           </div>
           <button type="button" className="btn btn-secondary btn-sm" onClick={handleOptimize}>
-            Retry
+            Retry Batching
           </button>
         </div>
       )}
@@ -96,14 +96,14 @@ export default function BatchTab() {
       {loading && (
         <div className="loading-state">
           <div className="spinner"></div>
-          <p>Calculating quote unit counts and packing batches using First-Fit Greedy algorithm...</p>
+          <p>CALCULATING TOKEN LOAD: Packing batches using First-Fit Greedy algorithm...</p>
         </div>
       )}
 
       {/* Initial Hint State */}
       {!loading && !error && !hasOptimized && (
         <div className="card hint-card">
-          <h3>How Batching Optimization Works</h3>
+          <h3>Deterministic Token Packing Algorithm</h3>
           <p>
             Each quote's unit consumption is measured deterministically. Quotes are packed sequentially into batches without exceeding the configured unit capacity limit. Any individual item that exceeds capacity alone is moved to <code>failed_items</code>.
           </p>
@@ -128,8 +128,8 @@ export default function BatchTab() {
               <span className="kpi-value">{receipt.total_batches_created}</span>
             </div>
             <div className="card kpi-card">
-              <span className="kpi-label">Max Capacity / Batch</span>
-              <span className="kpi-value">{receipt.max_units_per_request} units</span>
+              <span className="kpi-label">Token Capacity / Batch</span>
+              <span className="kpi-value">{receipt.max_units_per_request} u</span>
             </div>
           </div>
 
@@ -139,7 +139,7 @@ export default function BatchTab() {
               <div className="failed-header">
                 <span className="failed-icon">⚠️</span>
                 <div>
-                  <h3>Oversized Items Notice</h3>
+                  <h3>OVERFLOW / OVERSIZED ITEMS NOTICE</h3>
                   <p>
                     {receipt.failed_items.length} {receipt.failed_items.length === 1 ? 'item' : 'items'} exceeded the batch capacity limit of {receipt.max_units_per_request} units on their own and could not be packed:
                   </p>
@@ -160,7 +160,7 @@ export default function BatchTab() {
             <div className="section-meta">
               <h3>Generated Batches Summary</h3>
               <span className="badge-count">
-                {receipt.batches.length} {receipt.batches.length === 1 ? 'batch' : 'batches'}
+                {receipt.batches.length} {receipt.batches.length === 1 ? 'BATCH' : 'BATCHES'}
               </span>
             </div>
 
@@ -172,7 +172,7 @@ export default function BatchTab() {
                     <div className="batch-card-header">
                       <span className="batch-title">Batch #{b.batch_id}</span>
                       <span className="batch-capacity-badge">
-                        {b.total_units} / {receipt.max_units_per_request} units ({fillPercentage}%)
+                        {b.total_units} / {receipt.max_units_per_request} u ({fillPercentage}%)
                       </span>
                     </div>
 
@@ -184,7 +184,7 @@ export default function BatchTab() {
                     </div>
 
                     <div className="batch-items-details">
-                      <span className="items-header">{b.items.length} items included:</span>
+                      <span className="items-header">{b.items.length} items packed:</span>
                       <div className="batch-items-chips">
                         {b.items.map((item) => (
                           <span key={item.quote_id} className="item-chip">

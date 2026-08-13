@@ -6,6 +6,7 @@ export default function DatasetTab() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [viewMode, setViewMode] = useState('table') // 'table' | 'grid'
 
   const fetchDataset = async () => {
     setLoading(true)
@@ -57,7 +58,7 @@ export default function DatasetTab() {
   return (
     <div className="dataset-tab-container">
       <div className="tab-header">
-        <h2>Dataset Corpus Inspection</h2>
+        <h2>[CORPUS] Knowledge Archive & Dataset</h2>
         <p className="tab-description">
           Inspect, search, and filter the complete 100-quote Excel dataset repository powering QuoteLab's vector store, RAG debate engine, and batch optimizer.
         </p>
@@ -67,7 +68,7 @@ export default function DatasetTab() {
       {loading && (
         <div className="loading-state">
           <div className="spinner"></div>
-          <p>Fetching full quote corpus from repository...</p>
+          <p>FETCHING CORPUS: Loading quote nodes from repository...</p>
         </div>
       )}
 
@@ -78,7 +79,7 @@ export default function DatasetTab() {
             <span>⚠️ {error}</span>
           </div>
           <button type="button" className="btn btn-secondary btn-sm" onClick={fetchDataset}>
-            Retry
+            Retry Fetch
           </button>
         </div>
       )}
@@ -89,7 +90,7 @@ export default function DatasetTab() {
           {/* Metadata Summary KPI Cards */}
           <div className="kpi-grid">
             <div className="card kpi-card">
-              <span className="kpi-label">Total Quotes</span>
+              <span className="kpi-label">Total Corpus Quotes</span>
               <span className="kpi-value">{stats.total}</span>
             </div>
             <div className="card kpi-card">
@@ -101,14 +102,14 @@ export default function DatasetTab() {
               <span className="kpi-value">{stats.avgWords}</span>
             </div>
             <div className="card kpi-card">
-              <span className="kpi-label">Matching Quotes</span>
+              <span className="kpi-label">Matching Corpus Nodes</span>
               <span className="kpi-value">{filteredQuotes.length}</span>
             </div>
           </div>
 
-          {/* Filter / Search Bar */}
+          {/* Filter Bar & Layout View Switcher */}
           <div className="dataset-controls">
-            <div className="search-input-wrapper">
+            <div className="search-input-wrapper" style={{ flex: 1 }}>
               <input
                 type="text"
                 className="search-input"
@@ -126,6 +127,25 @@ export default function DatasetTab() {
                 </button>
               )}
             </div>
+
+            <div className="view-toggle-btns">
+              <button
+                type="button"
+                className={`btn btn-secondary btn-sm ${viewMode === 'table' ? 'active' : ''}`}
+                style={viewMode === 'table' ? { borderColor: 'var(--neon-cyan)', color: 'var(--neon-cyan)' } : {}}
+                onClick={() => setViewMode('table')}
+              >
+                Table View
+              </button>
+              <button
+                type="button"
+                className={`btn btn-secondary btn-sm ${viewMode === 'grid' ? 'active' : ''}`}
+                style={viewMode === 'grid' ? { borderColor: 'var(--neon-cyan)', color: 'var(--neon-cyan)' } : {}}
+                onClick={() => setViewMode('grid')}
+              >
+                Grid View
+              </button>
+            </div>
           </div>
 
           {/* No Matching Quotes State */}
@@ -136,8 +156,8 @@ export default function DatasetTab() {
             </div>
           )}
 
-          {/* Quotes Data Grid / Table */}
-          {filteredQuotes.length > 0 && (
+          {/* Table View */}
+          {filteredQuotes.length > 0 && viewMode === 'table' && (
             <div className="dataset-table-wrapper">
               <table className="dataset-table">
                 <thead>
@@ -173,6 +193,32 @@ export default function DatasetTab() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {/* Grid View */}
+          {filteredQuotes.length > 0 && viewMode === 'grid' && (
+            <div className="matches-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
+              {filteredQuotes.map((quote) => (
+                <div key={quote.id} className="quote-card">
+                  <div className="quote-card-header">
+                    <span className="quote-id-badge">ID: {quote.id}</span>
+                    <span className="quote-author">— {quote.author}</span>
+                  </div>
+                  <blockquote className="quote-text">
+                    "{quote.text}"
+                  </blockquote>
+                  {quote.tags && quote.tags.length > 0 && (
+                    <div className="quote-tags">
+                      {quote.tags.map((tag) => (
+                        <span key={tag} className="tag-chip">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>

@@ -36,10 +36,33 @@ export default function DebateTab() {
   return (
     <div className="debate-tab-container">
       <div className="tab-header">
-        <h2>Evidence-Backed Debate Generator</h2>
+        <h2>[ARENA] Evidence-Backed Debate Synthesizer</h2>
         <p className="tab-description">
           Synthesize multi-perspective philosophical arguments strictly grounded in verbatim quotes from the dataset. If evidence is insufficient, the system enforces a controlled refusal.
         </p>
+      </div>
+
+      {/* RAG Process Flow Visualizer */}
+      <div className="debate-flow-stepper">
+        <div className="flow-step active">
+          <span className="flow-step-num">1</span>
+          <span>Topic Input</span>
+        </div>
+        <span className="flow-arrow">➔</span>
+        <div className="flow-step active">
+          <span className="flow-step-num">2</span>
+          <span>Dense Vector Retrieval</span>
+        </div>
+        <span className="flow-arrow">➔</span>
+        <div className="flow-step active">
+          <span className="flow-step-num">3</span>
+          <span>Grounded Synthesis</span>
+        </div>
+        <span className="flow-arrow">➔</span>
+        <div className="flow-step active">
+          <span className="flow-step-num">4</span>
+          <span>Refusal Verification</span>
+        </div>
       </div>
 
       <form className="debate-form" onSubmit={handleSubmit}>
@@ -75,7 +98,7 @@ export default function DebateTab() {
                 onChange={(e) => setMinScore(parseFloat(e.target.value))}
                 disabled={loading}
               />
-              <span className="slider-hint">Higher values enforce stricter evidence matching</span>
+              <span className="slider-hint">Higher values enforce stricter evidence matching and refusal triggers</span>
             </div>
           </div>
 
@@ -84,7 +107,7 @@ export default function DebateTab() {
             className="btn btn-primary generate-btn"
             disabled={loading || !topic.trim()}
           >
-            {loading ? 'Synthesizing...' : 'Generate Debate'}
+            {loading ? 'Synthesizing...' : 'Synthesize Debate'}
           </button>
         </div>
       </form>
@@ -105,7 +128,7 @@ export default function DebateTab() {
       {loading && (
         <div className="loading-state">
           <div className="spinner"></div>
-          <p>Retrieving relevant quotes and generating grounded multi-perspective debate arguments...</p>
+          <p>SYNTHESIZING DEBATE: Retrieving relevant quotes & generating grounded multi-perspective arguments...</p>
         </div>
       )}
 
@@ -125,7 +148,7 @@ export default function DebateTab() {
           <div className="refusal-header">
             <span className="refusal-icon">🛑</span>
             <div>
-              <h3>Controlled Refusal: Insufficient Corpus Evidence</h3>
+              <h3>CONTROLLED REFUSAL: INSUFFICIENT EVIDENCE</h3>
               <p className="refusal-text">
                 {debate.refusal_message ||
                   `No quotes in the repository met the minimum similarity score threshold of ${(minScore * 100).toFixed(0)}% for topic "${debate.topic}".`}
@@ -146,7 +169,7 @@ export default function DebateTab() {
             <div className="section-meta">
               <h3>Synthesized Arguments</h3>
               <span className="badge-count">
-                {debate.arguments.length} {debate.arguments.length === 1 ? 'perspective' : 'perspectives'}
+                {debate.arguments.length} {debate.arguments.length === 1 ? 'PERSPECTIVE' : 'PERSPECTIVES'}
               </span>
             </div>
 
@@ -159,7 +182,7 @@ export default function DebateTab() {
                       <div className="citation-badges">
                         {arg.evidence_quote_ids.map((qid) => (
                           <span key={qid} className="citation-chip">
-                            Citation: {qid}
+                            CIT: {qid}
                           </span>
                         ))}
                       </div>
@@ -177,13 +200,13 @@ export default function DebateTab() {
               <div className="section-meta">
                 <h3>Grounding Evidence Quotes</h3>
                 <span className="badge-count">
-                  {debate.evidence_quotes.length} {debate.evidence_quotes.length === 1 ? 'quote cited' : 'quotes cited'}
+                  {debate.evidence_quotes.length} {debate.evidence_quotes.length === 1 ? 'QUOTE CITED' : 'QUOTES CITED'}
                 </span>
               </div>
 
               <div className="evidence-list">
                 {debate.evidence_quotes.map((quote) => (
-                  <div key={quote.id} className="card evidence-quote-card">
+                  <div key={quote.id} className="quote-card evidence-quote-card">
                     <div className="quote-card-header">
                       <span className="quote-id-badge">ID: {quote.id}</span>
                       <span className="quote-author">— {quote.author}</span>
