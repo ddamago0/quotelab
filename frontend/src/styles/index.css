@@ -436,6 +436,513 @@ body {
   border-radius: 4px;
 }
 
+/* Debate View Form & Controls */
+.debate-form {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.debate-input {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.debate-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.15);
+}
+
+.form-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.score-slider-group {
+  flex: 1;
+  min-width: 260px;
+}
+
+.slider-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.score-slider {
+  accent-color: var(--accent-blue);
+  cursor: pointer;
+  width: 100%;
+}
+
+.slider-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.generate-btn {
+  white-space: nowrap;
+}
+
+/* Refusal Banner */
+.refusal-banner {
+  background-color: rgba(210, 153, 34, 0.1);
+  border: 1px solid rgba(210, 153, 34, 0.3);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.refusal-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.refusal-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.refusal-header h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--accent-orange);
+  margin-bottom: 4px;
+}
+
+.refusal-text {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.refusal-suggestion {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-top: 1px solid rgba(210, 153, 34, 0.2);
+  padding-top: 10px;
+}
+
+/* Debate Results & Arguments */
+.debate-results {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.arguments-section, .evidence-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-meta h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.badge-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background-color: var(--bg-surface);
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.arguments-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.argument-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.argument-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.position-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background-color: rgba(56, 139, 253, 0.15);
+  color: var(--accent-blue);
+  border: 1px solid rgba(56, 139, 253, 0.3);
+}
+
+.citation-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.citation-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: var(--bg-surface);
+  color: var(--accent-green);
+  border: 1px solid rgba(63, 185, 80, 0.3);
+}
+
+.argument-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.evidence-quote-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quote-id-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: var(--bg-surface);
+  color: var(--accent-orange);
+  border: 1px solid rgba(210, 153, 34, 0.3);
+}
+
+/* Batch View Styles */
+.batch-form {
+  margin-bottom: 24px;
+}
+
+.capacity-input-group {
+  flex: 1;
+  min-width: 260px;
+}
+
+.batch-input {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.batch-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.15);
+}
+
+.batch-input.input-error {
+  border-color: var(--accent-red);
+}
+
+.field-error-text {
+  font-size: 0.8rem;
+  color: var(--accent-red);
+  margin-top: 4px;
+}
+
+.optimize-btn {
+  white-space: nowrap;
+}
+
+/* KPI Summary Cards */
+.batch-results {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.kpi-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.kpi-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Oversized Items Warning Banner */
+.failed-banner {
+  background-color: rgba(248, 81, 73, 0.1);
+  border: 1px solid rgba(248, 81, 73, 0.3);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.failed-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.failed-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.failed-header h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--accent-red);
+  margin-bottom: 4px;
+}
+
+.failed-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.failed-chip {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background-color: var(--bg-surface);
+  color: var(--accent-red);
+  border: 1px solid rgba(248, 81, 73, 0.3);
+}
+
+/* Batches Grid & Progress Bars */
+.batches-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.batches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.batch-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.batch-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.batch-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.batch-capacity-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  background-color: rgba(56, 139, 253, 0.15);
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.progress-bar-container {
+  height: 8px;
+  background-color: var(--bg-surface);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--accent-blue);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.batch-items-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 10px;
+}
+
+.items-header {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.batch-items-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.item-chip {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* Dataset View Styles */
+.dataset-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dataset-controls {
+  margin-bottom: 8px;
+}
+
+.dataset-table-wrapper {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.dataset-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.dataset-table th {
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dataset-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+  color: var(--text-primary);
+}
+
+.dataset-table tr:last-child td {
+  border-bottom: none;
+}
+
+.dataset-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.cell-id {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.quote-id-chip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: var(--bg-surface);
+  color: var(--accent-blue);
+  border: 1px solid rgba(56, 139, 253, 0.3);
+}
+
+.cell-author {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cell-text {
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.table-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
 @media (max-width: 768px) {
   .header {
     height: auto;

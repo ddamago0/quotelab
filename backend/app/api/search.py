@@ -1,11 +1,22 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
-from app.domain.models import SearchResult
+from app.domain.models import SearchResult, Quote
+from app.domain.ports import QuoteRepositoryPort
 from app.services.semantic_retriever import SemanticRetriever
-from app.api.dependencies import get_semantic_retriever
+from app.api.dependencies import get_semantic_retriever, get_quote_repository
 
-router = APIRouter(tags=["search"])
+router = APIRouter(tags=["quotes"])
+
+
+@router.get("/quotes", response_model=List[Quote], summary="List All Quotes")
+def get_all_quotes(
+    repository: QuoteRepositoryPort = Depends(get_quote_repository)
+) -> List[Quote]:
+    """Returns the complete quote corpus loaded from the repository."""
+    return repository.get_all_quotes()
+
 
 
 class SearchRequest(BaseModel):

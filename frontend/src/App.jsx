@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { getHealth } from './services/api.js'
-import PlaceholderView from './components/PlaceholderView.jsx'
 import SearchTab from './components/SearchTab.jsx'
+import DebateTab from './components/DebateTab.jsx'
+import BatchTab from './components/BatchTab.jsx'
+import DatasetTab from './components/DatasetTab.jsx'
 
 const TABS = [
   {
@@ -50,8 +52,6 @@ export default function App() {
       })
   }, [])
 
-  const currentTab = TABS.find((t) => t.id === activeTab) || TABS[0]
-
   return (
     <div className="app-container">
       <header className="header">
@@ -91,15 +91,10 @@ export default function App() {
       </header>
 
       <main className="main-content">
-        {activeTab === 'search' ? (
-          <SearchTab />
-        ) : (
-          <PlaceholderView
-            title={currentTab.title}
-            description={currentTab.description}
-            icon={currentTab.icon}
-          />
-        )}
+        {activeTab === 'search' && <SearchTab />}
+        {activeTab === 'debate' && <DebateTab />}
+        {activeTab === 'batch' && <BatchTab />}
+        {activeTab === 'dataset' && <DatasetTab />}
       </main>
     </div>
   )

@@ -72,3 +72,11 @@ export async function createBatches(payload = {}) {
     body: JSON.stringify(payload),
   })
 }
+
+/**
+ * Dataset corpus retrieval endpoint: GET /api/quotes
+ */
+export async function getQuotes() {
+  return request('/api/quotes')
+}
+
