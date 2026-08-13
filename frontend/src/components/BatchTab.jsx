@@ -75,7 +75,7 @@ export default function BatchTab() {
             className="btn btn-primary optimize-btn"
             disabled={loading}
           >
-            {loading ? 'Packing...' : 'Execute Batching'}
+            {loading ? 'Packing...' : 'Execute Packing'}
           </button>
         </div>
       </form>
@@ -87,7 +87,7 @@ export default function BatchTab() {
             <span>⚠️ {error}</span>
           </div>
           <button type="button" className="btn btn-secondary btn-sm" onClick={handleOptimize}>
-            Retry Batching
+            Retry Packing
           </button>
         </div>
       )}

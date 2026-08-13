@@ -97,17 +97,17 @@ export default function SearchTab() {
           <p>
             QuoteLab converts your query into a dense multilingual vector representation using <code>paraphrase-multilingual-MiniLM-L12-v2</code> and ranks quotes by semantic proximity.
           </p>
-          <div style={{ marginTop: '16px' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--neon-cyan)', display: 'block', marginBottom: '10px', textTransform: 'uppercase' }}>
+          <div style={{ marginTop: '18px' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.825rem', color: 'var(--color-secondary)', display: 'block', marginBottom: '10px', textTransform: 'uppercase', fontWeight: 800 }}>
               ⚡ Sample Discovery Triggers:
             </span>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
               {SAMPLE_QUERIES.map((sq, i) => (
                 <button
                   key={i}
                   type="button"
                   className="tag-chip"
-                  style={{ cursor: 'pointer', background: 'var(--bg-surface)', border: '1px solid var(--border-neon)', color: 'var(--text-primary)' }}
+                  style={{ cursor: 'pointer', background: 'var(--bg-surface)', border: '1px solid var(--color-secondary)', color: 'var(--text-primary)' }}
                   onClick={(e) => handleSearch(e, sq)}
                 >
                   "{sq}"

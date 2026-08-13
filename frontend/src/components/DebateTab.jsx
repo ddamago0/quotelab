@@ -148,7 +148,7 @@ export default function DebateTab() {
           <div className="refusal-header">
             <span className="refusal-icon">🛑</span>
             <div>
-              <h3>CONTROLLED REFUSAL: INSUFFICIENT EVIDENCE</h3>
+              <h3>EVIDENCE THRESHOLD NOT REACHED</h3>
               <p className="refusal-text">
                 {debate.refusal_message ||
                   `No quotes in the repository met the minimum similarity score threshold of ${(minScore * 100).toFixed(0)}% for topic "${debate.topic}".`}
@@ -167,7 +167,7 @@ export default function DebateTab() {
           {/* Multi-Perspective Arguments */}
           <div className="arguments-section">
             <div className="section-meta">
-              <h3>Synthesized Arguments</h3>
+              <h3>Synthesized Perspectives</h3>
               <span className="badge-count">
                 {debate.arguments.length} {debate.arguments.length === 1 ? 'PERSPECTIVE' : 'PERSPECTIVES'}
               </span>

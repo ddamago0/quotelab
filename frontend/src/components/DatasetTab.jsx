@@ -132,7 +132,7 @@ export default function DatasetTab() {
               <button
                 type="button"
                 className={`btn btn-secondary btn-sm ${viewMode === 'table' ? 'active' : ''}`}
-                style={viewMode === 'table' ? { borderColor: 'var(--neon-cyan)', color: 'var(--neon-cyan)' } : {}}
+                style={viewMode === 'table' ? { borderColor: 'var(--color-secondary)', color: 'var(--color-secondary)' } : {}}
                 onClick={() => setViewMode('table')}
               >
                 Table View
@@ -140,7 +140,7 @@ export default function DatasetTab() {
               <button
                 type="button"
                 className={`btn btn-secondary btn-sm ${viewMode === 'grid' ? 'active' : ''}`}
-                style={viewMode === 'grid' ? { borderColor: 'var(--neon-cyan)', color: 'var(--neon-cyan)' } : {}}
+                style={viewMode === 'grid' ? { borderColor: 'var(--color-secondary)', color: 'var(--color-secondary)' } : {}}
                 onClick={() => setViewMode('grid')}
               >
                 Grid View
