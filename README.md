@@ -137,15 +137,33 @@ Gracias al diseño desacoplado (Clean Architecture), la integración futura de u
 - No se requieren llaves de API, servicios en la nube ni la ejecución activa de Ollama para la ejecución por defecto.
 
 
-## Adaptador de Proveedor LLM Local con Ollama (Fase 4C-1)
+## Adaptador de Proveedor LLM Local con Ollama y Activación por Inyección de Dependencias (Fase 4C)
 
 ### Adaptador `OllamaLLMProvider`
 Se implementó el adaptador `OllamaLLMProvider` en `backend/app/infra/llm/ollama_llm_provider.py` que satisface el contrato `LLMProviderPort`.
 - **Comunicación HTTP**: Utiliza `httpx` para conectarse a la API REST de Ollama (`POST /api/chat`, por defecto en `http://localhost:11434`).
-- **Configuración Desacoplada**: Soporta `OLLAMA_BASE_URL`, `OLLAMA_MODEL` y `OLLAMA_TIMEOUT` configurables desde `backend/app/config.py`.
+- **Configuración Desacoplada**: Soporta `OLLAMA_BASE_URL`, `OLLAMA_MODEL` y `OLLAMA_TIMEOUT` configurables desde `backend/app/config.py` o variables de entorno.
 - **Parseo Defensivo**: Maneja respuestas estructuradas JSON y limpia automáticamente bloques envueltos en sintaxis Markdown (```json ... ```).
 - **Atribución Estricta**: Valida y garantiza que los `evidence_quote_ids` retornados correspondan exclusivamente a las citas de evidencia suministradas.
 - **Sin SDKs Propietarios ni Nube**: Cero dependencias de SDKs de terceros ni APIs en la nube.
 
-> [!NOTE]
-> **Estado de Activación**: La Fase 4C-1 crea y prueba de forma aislada el adaptador `OllamaLLMProvider`. **NO activa aún Ollama como el proveedor activo en la inyección de dependencias** (`dependencies.py`). `MockLLMProvider` se mantiene como el proveedor activo por defecto.
+### Selección Dinámica de Proveedor LLM en Inyección de Dependencias
+El proveedor de dependencias `get_llm_provider()` en `backend/app/api/dependencies.py` selecciona dinámicamente el adaptador a través de la variable `LLM_PROVIDER`:
+- `LLM_PROVIDER=mock` o `LLM_PROVIDER=mock-dev`: Retorna `MockLLMProvider` (comportamiento por defecto determinista para desarrollo y pruebas).
+- `LLM_PROVIDER=ollama`: Instancia `OllamaLLMProvider` para inferencia local a través del servicio local de Ollama.
+
+### Variables de Configuración de Ollama
+Las siguientes opciones son configurables en `.env` o mediante variables de entorno:
+```ini
+LLM_PROVIDER=mock-dev        # Opciones: 'mock-dev', 'mock', 'ollama'
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=qwen2.5:3b
+OLLAMA_TIMEOUT=180.0
+```
+
+### Pruebas Unitarias e Integración Real
+- **Pruebas Estándar**: La suite normal de pruebas (`.venv/bin/pytest`) utiliza dobles de prueba (`httpx.MockTransport` y `MockLLMProvider`) y **NO requiere** tener un demonio Ollama en ejecución.
+- **Prueba de Integración Real Opcional**: Existe una prueba de integración opcional en `tests/test_real_ollama_integration.py`. Se omite automáticamente en ejecuciones normales y se puede invocar explícitamente cuando el servicio Ollama está activo mediante:
+```bash
+RUN_REAL_OLLAMA_TESTS=1 .venv/bin/pytest -v tests/test_real_ollama_integration.py
+```
